@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const API = 'https://api-nodejs-express-prisma-mongo-db.onrender.com/';
+const API = 'https://api-nodejs-express-prisma-mongo-db.onrender.com/produto';
 
 export const criar = async (objeto) => axios.post(API, objeto);
 
