@@ -10,12 +10,15 @@ function Home() {
     const [lista_produtos, setListaProdutos] = useState([]);
 
     const dados = async (set) => {
-        try {
-          const respota = await listar();
-          set(respota.data);
-        } catch (error) {
-          console.error("erro ao listar usuarios", error)
-        }
+      const dadossalvos = JSON.parse(localStorage.getItem("produtossalvos"));
+      if(dadossalvos){
+        setListaProdutos(dadossalvos);
+      }
+      else {
+        const resposta = await listar()
+        localStorage.setItem("produtossalvos", JSON.stringify(resposta.data));
+        setListaProdutos(resposta.data);
+      }
       };
 
     useEffect(() => {
@@ -92,6 +95,7 @@ function Home() {
                           try {
                             excluir(produto.id);
                             alert("Produto excluído com sucesso!");
+                            localStorage.removeItem("produtossalvos");
                             dados(setListaProdutos); 
                           } catch (error) {
                             console.error("Erro ao excluir produto:", error);

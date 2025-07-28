@@ -10,11 +10,11 @@ const Criar = () => {
 
   const adicionar = async (e) => {
     e.preventDefault();
-
     if (produto.nome && produto.preco) {
       try {
         await criar({ ...produto, preco: Number(produto.preco) });
         alert("Produto criado com sucesso!");
+        localStorage.removeItem("produtossalvos");
         navigate("/");
       } catch (error) {
         console.error(error);
