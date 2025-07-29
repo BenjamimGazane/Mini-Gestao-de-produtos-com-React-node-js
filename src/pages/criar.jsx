@@ -6,21 +6,23 @@ import { listar } from "../utils/formUtils";
 
 const Criar = () => {
   const [produto, setProduto] = useState({nome: "", preco: "" });
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const adicionar = async (e) => {
     e.preventDefault();
     if (produto.nome && produto.preco) {
       try {
+        setLoading(true)
         await criar({ ...produto, preco: Number(produto.preco) });
         alert("Produto criado com sucesso!");
-        localStorage.removeItem("produtossalvos");
+        sessionStorage.removeItem("produtossalvos");
         navigate("/");
       } catch (error) {
         console.error(error);
         alert("Erro ao criar produto.");
-        
       }
+        setLoading(false)
     } else {
       alert("Por favor, preencha todos os campos.");
     }
@@ -51,7 +53,18 @@ const Criar = () => {
           <input type="number" className="form-control" id="preco" onChange={e => getInputDado(e,produto,setProduto)} required />
         </div>
 
-        <button type="submit" className="btn btn-success" onClick={adicionar}>Salvar Produto</button>
+        <button type="submit" className="btn btn-success" onClick={adicionar} disabled = {loading}>
+          {loading ? (<>
+            <span
+              className="spinner-border spinner-border-sm me-2"
+              role="status"
+              aria-hidden="true"
+            ></span>
+                Salvando...
+          </>) : (<>
+            <i className="bi bi-save"></i> Salvar Produto
+          </>)} 
+         </button>
         <Link to="/" className="btn btn-secondary ms-2">Voltar</Link>
       </form>
     </div>

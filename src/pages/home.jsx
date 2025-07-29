@@ -9,14 +9,19 @@ function Home() {
     // Estado para armazenar a lista de produtos
     const [lista_produtos, setListaProdutos] = useState([]);
 
+    const Atualizar = () => {
+         sessionStorage.removeItem("produtossalvos");
+              dados(setListaProdutos)
+    }
+
     const dados = async (set) => {
-      const dadossalvos = JSON.parse(localStorage.getItem("produtossalvos"));
+      const dadossalvos = JSON.parse(sessionStorage.getItem("produtossalvos"));
       if(dadossalvos){
         setListaProdutos(dadossalvos);
       }
       else {
         const resposta = await listar()
-        localStorage.setItem("produtossalvos", JSON.stringify(resposta.data));
+        sessionStorage.setItem("produtossalvos", JSON.stringify(resposta.data));
         setListaProdutos(resposta.data);
       }
       };
@@ -64,10 +69,8 @@ function Home() {
           <Link to = "/criar" className="btn btn-success">
             <i className="bi bi-plus-circle"></i> Criar Produto
           </Link>
-          <button className="btn btn-primary" onClick={() => {
-              localStorage.removeItem("produtossalvos");
-              dados(setListaProdutos)
-              }
+          <button className="btn btn-primary" onClick={() => 
+                Atualizar()  
             } >
             <i className="bi bi-arrow-repeat"></i> Atualizar
           </button>

@@ -15,9 +15,9 @@ function Editar() {
     setLoading(true);
     try {
       await editar(produto2.id, { ...produto2, preco: Number(produto2.preco) });
-      localStorage.removeItem("produtossalvos");
+      sessionStorage.removeItem("produtossalvos");
       const resposta = await listar();
-      localStorage.setItem("produtossalvos", JSON.stringify(resposta.data));
+      sessionStorage.setItem("produtossalvos", JSON.stringify(resposta.data));
       alert("Produto editado com sucesso!");
       navigate("/");
     } catch (error) {
