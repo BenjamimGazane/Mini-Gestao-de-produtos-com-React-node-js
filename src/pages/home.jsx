@@ -5,14 +5,45 @@ import { excluir } from "../utils/formUtils";
 
 
 function Home() {
-    
-    // Estado para armazenar a lista de produtos
-    const [lista_produtos, setListaProdutos] = useState([]);
+   const [mensagens, setMensagens] = useState([]);
 
     const Atualizar = () => {
          sessionStorage.removeItem("produtossalvos");
               dados(setListaProdutos)
     }
+
+    useEffect(() => {
+    const intervalo = setInterval(() => {
+      console.log("atualização a cada 10 segundos");
+      Atualizar();
+    }, 10000);
+
+    return () => clearInterval(intervalo); // limpa o intervalo ao desmontar
+    }, []);
+
+    useEffect(() => {
+    const evento = new EventSource("http://localhost:3000/stream");
+
+    evento.onmessage = (e) => {
+      try {
+        Atualizar()
+      } catch {
+        console.log("Mensagem inválida", e.data);
+      }
+    };
+
+    evento.onerror = () => {
+      console.error("Erro na conexão SSE");
+      evento.close();
+    };
+
+    return () => {
+      evento.close();
+    };
+      }, []);
+
+    // Estado para armazenar a lista de produtos
+    const [lista_produtos, setListaProdutos] = useState([]);
 
     const dados = async (set) => {
       const dadossalvos = JSON.parse(sessionStorage.getItem("produtossalvos"));
@@ -104,7 +135,7 @@ function Home() {
                           try {
                             excluir(produto.id);
                             alert("Produto excluído com sucesso!");
-                            localStorage.removeItem("produtossalvos");
+                            sessionStorage.removeItem("produtossalvos");
                             dados(setListaProdutos); 
                           } catch (error) {
                             console.error("Erro ao excluir produto:", error);
