@@ -47,7 +47,9 @@ function Home() {
           justify-content: center;
         }
         .table td, .table th {
-          vertical-align: middle;
+            white-space: nowrap;
+            max-width: 150px;
+            overflow: hidden; 
         }
       `}</style>
 
@@ -62,7 +64,11 @@ function Home() {
           <Link to = "/criar" className="btn btn-success">
             <i className="bi bi-plus-circle"></i> Criar Produto
           </Link>
-          <button className="btn btn-primary" onClick={() => setListaProdutos(JSON.parse(localStorage.getItem("produtosSalvos")))} >
+          <button className="btn btn-primary" onClick={() => {
+              localStorage.removeItem("produtossalvos");
+              dados(setListaProdutos)
+              }
+            } >
             <i className="bi bi-arrow-repeat"></i> Atualizar
           </button>
         </div>

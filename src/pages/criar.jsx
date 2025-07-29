@@ -19,6 +19,7 @@ const Criar = () => {
       } catch (error) {
         console.error(error);
         alert("Erro ao criar produto.");
+        
       }
     } else {
       alert("Por favor, preencha todos os campos.");
