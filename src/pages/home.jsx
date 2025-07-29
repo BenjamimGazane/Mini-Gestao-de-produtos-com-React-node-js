@@ -22,7 +22,7 @@ function Home() {
     }, []);
 
     useEffect(() => {
-    const evento = new EventSource("http://localhost:3000/stream");
+    const evento = new EventSource("https://api-nodejs-express-prisma-mongo-db.onrender.com/stream");
 
     evento.onmessage = (e) => {
       try {
