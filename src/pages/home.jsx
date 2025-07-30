@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { listar } from "../utils/formUtils";
 import { excluir } from "../utils/formUtils";
 
-
 function Home() {
    const [mensagens, setMensagens] = useState([]);
 
@@ -12,35 +11,24 @@ function Home() {
               dados(setListaProdutos)
     }
 
-    useEffect(() => {
-    const intervalo = setInterval(() => {
-      console.log("atualização a cada 10 segundos");
-      Atualizar();
-    }, 10000);
+    const API = "https://api-nodejs-express-prisma-mongo-db.onrender.com/stream";
+    const API2 = "http://localhost:3000/stream";
 
-    return () => clearInterval(intervalo); // limpa o intervalo ao desmontar
+    useEffect(() => {
+      const evento = new EventSource(API);
+
+      evento.onmessage = (e) => {
+        Atualizar();
+      };
+
+      evento.onerror = (e) => {
+        console.error("Erro SSE:", e);
+      };
+
+      return () => {
+        evento.close();
+      };
     }, []);
-
-    useEffect(() => {
-    const evento = new EventSource("https://api-nodejs-express-prisma-mongo-db.onrender.com/stream");
-
-    evento.onmessage = (e) => {
-      try {
-        Atualizar()
-      } catch {
-        console.log("Mensagem inválida", e.data);
-      }
-    };
-
-    evento.onerror = () => {
-      console.error("Erro na conexão SSE");
-      evento.close();
-    };
-
-    return () => {
-      evento.close();
-    };
-      }, []);
 
     // Estado para armazenar a lista de produtos
     const [lista_produtos, setListaProdutos] = useState([]);
