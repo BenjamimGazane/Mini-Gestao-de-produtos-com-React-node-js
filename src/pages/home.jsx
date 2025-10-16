@@ -42,11 +42,11 @@ const Home = () => {
 
         // vendas
         const vendasIniciais = [
-            { id: 1, data: "2024-01-15", valorTotal: 720.00, formaPagamento: "cartao", itens: [
+            { id: 1, data: "2025-10-16", valorTotal: 720.00, formaPagamento: "cartao", itens: [
                 { produtoId: 1, quantidade: 2, precoUnitario: 270.00 },
                 { produtoId: 3, quantidade: 2, precoUnitario: 90.00 }
             ]},
-            { id: 2, data: "2024-01-14", valorTotal: 498.00, formaPagamento: "dinheiro", itens: [
+            { id: 2, data: "2025-10-16", valorTotal: 498.00, formaPagamento: "dinheiro", itens: [
                 { produtoId: 2, quantidade: 1, precoUnitario: 228.00 },
                 { produtoId: 5, quantidade: 2, precoUnitario: 72.00 },
                 { produtoId: 7, quantidade: 1, precoUnitario: 150.00 }
@@ -89,7 +89,7 @@ const Home = () => {
     const renderActiveSection = () => {
         switch (activeSection) {
             case 'dashboard':
-                return <Dashboard />;
+                return <Dashboard produtos={produtos} vendas={vendas} />;
             case 'vendas':
                 return <Vendas produtos={produtos} />;
             case 'produtos':
