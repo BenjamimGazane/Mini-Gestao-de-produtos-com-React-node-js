@@ -21,7 +21,6 @@ const Home = () => {
     const [modalDespesaOpen, setModalDespesaOpen] = useState(false);
     const [modalUsuarioOpen, setModalUsuarioOpen] = useState(false);
 
-    // Seus dados
     const [produtos, setProdutos] = useState([]);
     const [vendas, setVendas] = useState([]);
     const [despesas, setDespesas] = useState([]);
@@ -41,18 +40,19 @@ const Home = () => {
         ];
 
         // vendas
-        const vendasIniciais = [
-            { id: 1, data: "2025-10-16", valorTotal: 720.00, formaPagamento: "cartao", itens: [
-                { produtoId: 1, quantidade: 2, precoUnitario: 270.00 },
-                { produtoId: 3, quantidade: 2, precoUnitario: 90.00 }
-            ]},
-            { id: 2, data: "2025-10-16", valorTotal: 498.00, formaPagamento: "dinheiro", itens: [
-                { produtoId: 2, quantidade: 1, precoUnitario: 228.00 },
-                { produtoId: 5, quantidade: 2, precoUnitario: 72.00 },
-                { produtoId: 7, quantidade: 1, precoUnitario: 150.00 }
-            ]}
-        ];
-
+    const vendasIniciais = [
+    { id: 1,data: "2025-10-16", valorTotal: 720.00, formaPagamento: "cartao", lucro: 324.00,itens: [
+            { produtoId: 1, quantidade: 2, precoUnitario: 270.00 },
+            { produtoId: 3, quantidade: 2, precoUnitario: 90.00 }
+        ]
+    },
+    {id: 2, data: "2025-10-16", valorTotal: 498.00, formaPagamento: "dinheiro", lucro: 228.00,itens: [
+            { produtoId: 2, quantidade: 1, precoUnitario: 228.00 },
+            { produtoId: 5, quantidade: 2, precoUnitario: 72.00 },
+            { produtoId: 7, quantidade: 1, precoUnitario: 150.00 }
+        ]
+    }
+];
         // despesas
         const despesasIniciais = [
             { id: 1, data: "2024-01-15", descricao: "Aluguel loja", categoria: "aluguel", valor: 7200.00 },
@@ -102,6 +102,7 @@ const Home = () => {
             case 'financeiro':
                 return <Financeiro 
                     despesas={despesas}
+                    vendas={vendas}
                     onOpenModal={() => setModalDespesaOpen(true)}
                 />;
             case 'usuarios':

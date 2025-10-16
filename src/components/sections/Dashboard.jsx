@@ -9,23 +9,27 @@ const Dashboard = ({ produtos = [], vendas = [] }) => {
         const vendasHoje = vendas.filter(venda => venda.data === hoje);
         const totalVendasHoje = vendasHoje.reduce((total, venda) => total + venda.valorTotal, 0);
         
+        // Lucro de hoje (usando o atributo lucro)
+        const lucroHoje = vendasHoje.reduce((total, venda) => total + (venda.lucro || 0), 0);
+        
         // Total de vendas
         const totalVendas = vendas.length;
+        
+        // Lucro total (todas as vendas)
+        const lucroTotal = vendas.reduce((total, venda) => total + (venda.lucro || 0), 0);
         
         // Alertas de estoque
         const alertasEstoque = produtos.filter(produto => 
             produto.estoque !== null && 
             produto.estoque <= produto.estoqueMinimo
         ).length;
-        
-        // Lucro diário (estimado - 50% de margem para exemplo)
-        const lucroDiario = totalVendasHoje * 0.5;
 
         return {
             totalVendasHoje,
             totalVendas,
             alertasEstoque,
-            lucroDiario
+            lucroHoje,
+            lucroTotal
         };
     };
 
@@ -113,9 +117,9 @@ const Dashboard = ({ produtos = [], vendas = [] }) => {
                             <i className="bi bi-graph-up"></i>
                         </div>
                         <div className="stats-value">
-                            MT {metricas.lucroDiario.toFixed(2)}
+                            MT {metricas.lucroHoje.toFixed(2)}
                         </div>
-                        <div className="stats-label">Lucro Diário</div>
+                        <div className="stats-label">Lucro Hoje</div>
                     </div>
                 </div>
             </div>
@@ -135,8 +139,9 @@ const Dashboard = ({ produtos = [], vendas = [] }) => {
                                             <th width="80">ID</th>
                                             <th width="100">Data</th>
                                             <th>Produtos Vendidos</th>
-                                            <th width="100">Quantidade</th>
-                                            <th width="120">Valor Total</th>
+                                            <th width="80">Quantidade</th>
+                                            <th width="100">Valor Total</th>
+                                            <th width="100">Lucro</th>
                                             <th width="120">Pagamento</th>
                                             <th width="100">Status</th>
                                         </tr>
@@ -155,6 +160,11 @@ const Dashboard = ({ produtos = [], vendas = [] }) => {
                                                         <strong>MT {venda.valorTotal.toFixed(2)}</strong>
                                                     </td>
                                                     <td>
+                                                        <strong className="text-success">
+                                                            MT {(venda.lucro || 0).toFixed(2)}
+                                                        </strong>
+                                                    </td>
+                                                    <td>
                                                         <span className="badge bg-light text-dark">
                                                             {formatarPagamento(venda.formaPagamento)}
                                                         </span>
@@ -166,7 +176,7 @@ const Dashboard = ({ produtos = [], vendas = [] }) => {
                                             ))
                                         ) : (
                                             <tr>
-                                                <td colSpan="7" className="text-center py-4">
+                                                <td colSpan="8" className="text-center py-4">
                                                     <i className="bi bi-receipt display-4 text-muted"></i>
                                                     <p className="text-muted mt-2 mb-0">Nenhuma venda realizada</p>
                                                 </td>
