@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
+import ModalDetalhesVenda from '../modals/ModalDetalhesVenda';
 
 const Dashboard = ({ produtos = [], vendas = [] }) => {
+    const [modalDetalhesOpen, setModalDetalhesOpen] = useState(false);
+    const [vendaSelecionada, setVendaSelecionada] = useState(null);
+
     // Calcular métricas dinâmicas
     const calcularMetricas = () => {
         const hoje = new Date().toISOString().split('T')[0];
@@ -29,7 +33,8 @@ const Dashboard = ({ produtos = [], vendas = [] }) => {
             totalVendas,
             alertasEstoque,
             lucroHoje,
-            lucroTotal
+            lucroTotal,
+            vendasHojeCount: vendasHoje.length
         };
     };
 
@@ -75,9 +80,18 @@ const Dashboard = ({ produtos = [], vendas = [] }) => {
         );
     };
 
+    // Abrir modal de detalhes
+    const abrirDetalhesVenda = (venda) => {
+        setVendaSelecionada(venda);
+        setModalDetalhesOpen(true);
+    };
+
     const metricas = calcularMetricas();
     const alertas = getAlertasEstoque();
-    const vendasRecentes = vendas.slice(0, 5); // Últimas 5 vendas
+    
+    // TODAS as vendas de hoje (não limitado a 5)
+    const hoje = new Date().toISOString().split('T')[0];
+    const vendasHoje = vendas.filter(venda => venda.data === hoje);
 
     return (
         <section id="dashboard" className="content-section">
@@ -98,8 +112,8 @@ const Dashboard = ({ produtos = [], vendas = [] }) => {
                         <div className="stats-icon success">
                             <i className="bi bi-cart-check"></i>
                         </div>
-                        <div className="stats-value">{metricas.totalVendas}</div>
-                        <div className="stats-label">Vendas Realizadas</div>
+                        <div className="stats-value">{metricas.vendasHojeCount}</div>
+                        <div className="stats-label">Vendas Hoje</div>
                     </div>
                 </div>
                 <div className="col-md-3 col-6">
@@ -128,8 +142,8 @@ const Dashboard = ({ produtos = [], vendas = [] }) => {
                 <div className="col-md-8">
                     <div className="card">
                         <div className="card-header d-flex justify-content-between align-items-center">
-                            <h5 className="card-title mb-0">Vendas Recentes</h5>
-                            <small className="text-muted">Últimas 5 vendas</small>
+                            <h5 className="card-title mb-0">Vendas de Hoje</h5>
+                            <small className="text-muted">{vendasHoje.length} vendas realizadas</small>
                         </div>
                         <div className="card-body p-0">
                             <div className="table-container">
@@ -143,13 +157,17 @@ const Dashboard = ({ produtos = [], vendas = [] }) => {
                                             <th width="100">Valor Total</th>
                                             <th width="100">Lucro</th>
                                             <th width="120">Pagamento</th>
-                                            <th width="100">Status</th>
+                                            <th width="100">Ações</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {vendasRecentes.length > 0 ? (
-                                            vendasRecentes.map(venda => (
-                                                <tr key={venda.id}>
+                                        {vendasHoje.length > 0 ? (
+                                            vendasHoje.map(venda => (
+                                                <tr 
+                                                    key={venda.id} 
+                                                    style={{ cursor: 'pointer' }}
+                                                    onClick={() => abrirDetalhesVenda(venda)}
+                                                >
                                                     <td>#{venda.id}</td>
                                                     <td>{venda.data}</td>
                                                     <td>
@@ -170,7 +188,15 @@ const Dashboard = ({ produtos = [], vendas = [] }) => {
                                                         </span>
                                                     </td>
                                                     <td>
-                                                        <span className="badge bg-success">Concluída</span>
+                                                        <button 
+                                                            className="btn btn-sm btn-outline-primary"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                abrirDetalhesVenda(venda);
+                                                            }}
+                                                        >
+                                                            <i className="bi bi-eye"></i> Detalhes
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             ))
@@ -178,7 +204,7 @@ const Dashboard = ({ produtos = [], vendas = [] }) => {
                                             <tr>
                                                 <td colSpan="8" className="text-center py-4">
                                                     <i className="bi bi-receipt display-4 text-muted"></i>
-                                                    <p className="text-muted mt-2 mb-0">Nenhuma venda realizada</p>
+                                                    <p className="text-muted mt-2 mb-0">Nenhuma venda realizada hoje</p>
                                                 </td>
                                             </tr>
                                         )}
@@ -222,6 +248,14 @@ const Dashboard = ({ produtos = [], vendas = [] }) => {
                     </div>
                 </div>
             </div>
+
+            {/* Modal de Detalhes da Venda */}
+            <ModalDetalhesVenda 
+                isOpen={modalDetalhesOpen}
+                onClose={() => setModalDetalhesOpen(false)}
+                venda={vendaSelecionada}
+                produtos={produtos}
+            />
         </section>
     );
 };

@@ -11,6 +11,7 @@ import Configuracoes from '../components/sections/Configuracoes';
 import ModalProduto from '../components/modals/ModalProduto';
 import ModalDespesa from '../components/modals/ModalDespesa';
 import ModalUsuario from '../components/modals/ModalUsuario';
+import ModalDetalhesVenda from '../components/modals/ModalDetalhesVenda';
 import './home.css'
 
 const Home = () => {
@@ -25,7 +26,7 @@ const Home = () => {
     const [vendas, setVendas] = useState([]);
     const [despesas, setDespesas] = useState([]);
     const [usuarios, setUsuarios] = useState([]);
-
+    
    
     useEffect(() => {
         
@@ -38,15 +39,16 @@ const Home = () => {
             { id: 6, nome: "Charuto Cubano", categoria: "charuto", precoCompra: 90.00, precoVenda: 180.00, estoque: 35, estoqueMinimo: 30, ativo: true },
             { id: 7, nome: "Queijo Português", categoria: "extra", precoCompra: 72.00, precoVenda: 150.00, estoque: null, estoqueMinimo: null, ativo: true }
         ];
-
+        
+        
         // vendas
     const vendasIniciais = [
-    { id: 1,data: "2025-10-16", valorTotal: 720.00, formaPagamento: "cartao", lucro: 324.00,itens: [
+    { id: 1,data: "2025-10-17", valorTotal: 720.00, formaPagamento: "cartao", lucro: 324.00,itens: [
             { produtoId: 1, quantidade: 2, precoUnitario: 270.00 },
             { produtoId: 3, quantidade: 2, precoUnitario: 90.00 }
         ]
     },
-    {id: 2, data: "2025-10-16", valorTotal: 498.00, formaPagamento: "dinheiro", lucro: 228.00,itens: [
+    {id: 2, data: "2025-10-17", valorTotal: 498.00, formaPagamento: "dinheiro", lucro: 228.00,itens: [
             { produtoId: 2, quantidade: 1, precoUnitario: 228.00 },
             { produtoId: 5, quantidade: 2, precoUnitario: 72.00 },
             { produtoId: 7, quantidade: 1, precoUnitario: 150.00 }
@@ -70,6 +72,7 @@ const Home = () => {
         setVendas(vendasIniciais);
         setDespesas(despesasIniciais);
         setUsuarios(usuariosIniciais);
+        
     }, []);
 
     const toggleSidebar = () => {
